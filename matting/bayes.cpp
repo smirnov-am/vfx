@@ -1,6 +1,6 @@
 #include <iostream> 
 #include "trimap.h"
-#include "bayes.h"
+#include "matting.h"
 
 using namespace std;
 using namespace cv;
@@ -83,8 +83,6 @@ Mat BayesMatting::alpha_map(Mat frame)
     int counter = 0;
     float progress = 0.0;
 
-    Mat demo = frame.clone(); // change
-    Mat demo_res;
     for(int i=0; i<frame.rows; i++) 
     {
         for(int j=0; j<frame.cols; j++) 

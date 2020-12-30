@@ -3,7 +3,7 @@
 #include <opencv2/imgcodecs.hpp>
 #include <opencv2/videoio.hpp>
 #include <cmath>
-#include "bayes.h"
+#include "matting.h"
 
 
 using namespace std;
@@ -16,15 +16,26 @@ int main(int argc, char *argv[])
     const string source = argv[1];  
     const string trimap_path = argv[2];        
     const string key_frame_path = argv[3];
-    
+    const string algo =  argv[4];
+
     Mat key_frame = imread(key_frame_path, IMREAD_COLOR);
     key_frame.convertTo(key_frame, CV_32FC3, 1.0/255);
 
     Mat trimap = imread(trimap_path, IMREAD_GRAYSCALE);
     trimap.convertTo(trimap, CV_32F, 1.0/255);
 
-
-    BayesMatting matter(0.01, 0.1, trimap);
+    MlpMatting mlp_matter(9, 0.01, 1000, trimap);
+    BayesMatting bayes_matter(0.01, 0.1, trimap);
+    MatterContext matter;
+    
+    if (algo=="mlp") 
+    {
+        matter.set_algo(&mlp_matter);
+    }
+    else {
+        matter.set_algo(&bayes_matter);
+    }
+    
     matter.model(key_frame);
 
 
@@ -67,8 +78,8 @@ int main(int argc, char *argv[])
 
         frame_counter ++;
 
-        // uncomment to get alpha for the first frame and avoid waiting 
-        //imwrite("alpha_oop.png", alpha_map);
-        //break;
+        //uncomment to get alpha for the first frame and avoid waiting 
+        imwrite("alpha_oop.png", alpha_map);
+        break;
     }
 }
