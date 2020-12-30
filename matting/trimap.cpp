@@ -5,7 +5,7 @@ using namespace cv;
 using namespace Eigen;
 
 
-vector<vector<float>> extract_pixels(Mat const& img, Mat const& trimap, int val) 
+vector<vector<float>> extract_pixels(Mat const& img, Mat const& trimap, float val) 
 {   
     vector<vector<float>> pixels{{}, {}, {}};
 
@@ -14,7 +14,7 @@ vector<vector<float>> extract_pixels(Mat const& img, Mat const& trimap, int val)
         for(int j=0; j<img.cols; j++) 
         {   
 
-            if (static_cast<int>(trimap.at<uchar>(i, j)) == val)
+            if (trimap.at<float>(i, j) == val)
             {
                 for (int c=0;c<3;c++) {
                     pixels[c].push_back(static_cast<float>(img.at<Vec3f>(i,j)[c]));
@@ -34,4 +34,23 @@ Mat to_mat(vector<vector<float>> pixels)
           result.at<float>(i, j) = pixels.at(j).at(i);
 
     return result;
+}
+
+
+tuple<VectorXf, MatrixXf> fit_gauss(vector<vector<float>> pixels)
+{   
+
+    int n_pixels = pixels[0].size();
+    
+    MatrixXf res_pixels(n_pixels, 3);
+    
+    for (int c=0;c<3;c++) 
+    {
+        res_pixels.col(c) = Map<VectorXf>(pixels[c].data(), n_pixels);
+    }
+    auto mu = res_pixels.colwise().mean();
+    MatrixXf centered = res_pixels.rowwise() - mu;
+    MatrixXf cov = (centered.adjoint() * centered) / double(res_pixels.rows() - 1);
+
+    return make_tuple(mu, cov.inverse());
 }
