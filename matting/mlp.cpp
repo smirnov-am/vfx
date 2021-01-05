@@ -37,7 +37,7 @@ void MlpMatting::model(Mat keyframe)
     layersSize.row(2) = Scalar(mlp_output.cols);
     mlp->setLayerSizes(layersSize);
 
-    mlp->setActivationFunction(ANN_MLP::ActivationFunctions::RELU);
+    mlp->setActivationFunction(ANN_MLP::ActivationFunctions::SIGMOID_SYM, 1, 1);
 
     TermCriteria termCrit = TermCriteria(
         TermCriteria::Type::MAX_ITER + TermCriteria::Type::EPS,
@@ -78,7 +78,6 @@ Mat MlpMatting::alpha_map(Mat frame)
             mlp->predict(pixel, result);
 
             alpha_map.at<float>(i, j) = result.at<float>(0, 0);
-
             
             progress = 100.0*counter/(frame.rows*frame.cols);
             if (fmod(progress, 2.0) == 0) 
