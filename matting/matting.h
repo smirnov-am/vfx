@@ -18,7 +18,7 @@ class Matting
          * Feed consecutive frames to it 
          * @param frame opencv mat with a frame
          */
-        virtual cv::Mat alpha_map(cv::Mat frame) {};
+        virtual cv::Mat alpha_map(cv::Mat frame) { cv::Mat m; return m;};
 };
 
 class MlpMatting: public Matting {
@@ -36,7 +36,6 @@ class MlpMatting: public Matting {
             epsilon(epsilon), 
             max_iter(max_iter), 
             trimap(trimap) {};
-        
         /**
          * Call this method before generating alpha maps.
          * It analyzes a keyframe and trains neural network
