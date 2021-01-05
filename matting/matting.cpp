@@ -79,7 +79,7 @@ int main(int argc, char *argv[])
         frame_counter ++;
 
         //uncomment to get alpha for the first frame and avoid waiting 
-        imwrite("alpha_oop.png", alpha_map);
-        break;
+        //imwrite("alpha_oop_b1.png", alpha_map);
+        //break;
     }
 }
