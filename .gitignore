@@ -1,3 +1,6 @@
+*
+!*/
+!*.*
 ### C++ ###
 # Prerequisites
 *.d
@@ -65,3 +68,4 @@ ipython_config.py
 *.jpeg
 *.avi
 *.MOV
+*.mp4
